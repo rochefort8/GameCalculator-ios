@@ -7,8 +7,10 @@
 //
 
 #import "ViewController.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface ViewController ()
+@interface ViewController ()<AVAudioPlayerDelegate>
+
 @property (weak, nonatomic) IBOutlet UIImageView *segmentImage_0;
 @property (weak, nonatomic) IBOutlet UIImageView *segmentImage_1;
 @property (weak, nonatomic) IBOutlet UIImageView *segmentImage_2;
@@ -19,6 +21,11 @@
 @property (weak, nonatomic) IBOutlet UIImageView *segmentImage_target;
 
 @property (weak, nonatomic) NSTimer *updateDigitTimer ;
+
+@property (strong, nonatomic) AVAudioPlayer *audioHit ;
+@property (strong, nonatomic) AVAudioPlayer *audioNotHit ;
+@property (strong, nonatomic) AVAudioPlayer *audioOver ;
+@property (strong, nonatomic) AVAudioPlayer *audioUFO,*audioClear ;
 
 @end
 
@@ -71,6 +78,8 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
     stageNumber = 0 ;
     repeatCountInStage = 0;
     targetNumber = 0;
+    
+    [self initAudio];
 }
 
 
@@ -80,9 +89,14 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
 }
 
 - (IBAction)onReset:(id)sender {
+    [self startStage];
+}
+
+-(void)startStage {
     stageNumber = 0 ;
     repeatCountInStage = 0 ;
     shootCount = 0 ;
+    emergeUFO = 0 ;
     [self resetSegment];
     [self setNextDigit];
 }
@@ -90,7 +104,6 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
 - (void)resetSegment {
     targetNumber = 0;
     sumOfShootNumber = 0 ;
-    emergeUFO = 0 ;
     digitCount = 0 ;
     
     for (int i = 0;i < MAX_SEGMENT_POSITION;i++) {
@@ -128,8 +141,11 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
         NSLog(@"Over") ;
         if (++repeatCountInStage < MAX_REPEAT_COUNT_IN_STAGE) {
             [self resetSegment] ;
+            [self.audioOver play] ;
+
         } else {
             NSLog(@"GAME OVER") ;
+            AudioServicesPlaySystemSound(1020);
             return ;
         }
     }
@@ -187,6 +203,12 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
         }
     }
     if (found == true) {
+        
+        if (targetNumber == SEG_DIGIT_UFO) {
+            [self.audioUFO play] ;
+        } else {
+            [self.audioHit play] ;
+        }
         NSLog(@"Hit %d at segment %d.", targetNumber,i);
         if ((SEG_DIGIT_1 <= targetNumber) && (targetNumber <= SEG_DIGIT_9)) {
             sumOfShootNumber += targetNumber ;
@@ -208,12 +230,78 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
                 NSLog(@"digitCount!=0, ==%d",digitCount) ;
             }
             NSLog(@"Clear!!") ;
+            [self.audioClear play] ;
+            
             [_updateDigitTimer invalidate];
+         
+            _updateDigitTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+                                                                 target:self
+                                                               selector:@selector(nextStageTimerExpired:)
+                                                               userInfo:nil
+                                                                repeats:NO];
         }
 
     } else {
         NSLog(@"No %d found.", targetNumber);
+        [self.audioNotHit play] ;
     }
 }
+
+-(void)nextStageTimerExpired:(NSTimer*)timer{
+    [_updateDigitTimer invalidate] ;
+    
+    [self startStage] ;
+}
+
+- (void)initAudio
+{
+    NSError *error ;
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Hit" ofType:@"mp3"];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioHit = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    self.audioHit.numberOfLoops = 0 ;
+    if ( error != nil ) {
+        NSLog(@"Error %@", [error localizedDescription]);
+    }
+    [self.audioHit setDelegate:self];
+
+    path = [[NSBundle mainBundle] pathForResource:@"NotHit" ofType:@"mp3"];
+    url = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioNotHit = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    self.audioNotHit.numberOfLoops = 0 ;
+    if ( error != nil ) {
+        NSLog(@"Error %@", [error localizedDescription]);
+    }
+    [self.audioNotHit setDelegate:self];
+
+    path = [[NSBundle mainBundle] pathForResource:@"Over" ofType:@"mp3"];
+    url = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioOver = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    self.audioOver.numberOfLoops = 0 ;
+    if ( error != nil ) {
+        NSLog(@"Error %@", [error localizedDescription]);
+    }
+    [self.audioOver setDelegate:self];
+
+    path = [[NSBundle mainBundle] pathForResource:@"UFO" ofType:@"mp3"];
+    url = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioUFO = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    self.audioUFO.numberOfLoops = 0 ;
+    if ( error != nil ) {
+        NSLog(@"Error %@", [error localizedDescription]);
+    }
+    [self.audioUFO setDelegate:self];
+
+    path = [[NSBundle mainBundle] pathForResource:@"Clear" ofType:@"mp3"];
+    url = [[NSURL alloc] initFileURLWithPath:path];
+    self.audioClear = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    self.audioClear.numberOfLoops = 0 ;
+    if ( error != nil ) {
+        NSLog(@"Error %@", [error localizedDescription]);
+    }
+    [self.audioClear setDelegate:self];
+}
+
 
 @end

@@ -15,6 +15,12 @@
 		0244F37E1E32E40B00D37EEF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0244F37C1E32E40B00D37EEF /* LaunchScreen.storyboard */; };
 		0244F3891E32E40B00D37EEF /* GameCalculatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0244F3881E32E40B00D37EEF /* GameCalculatorTests.m */; };
 		0244F3941E32E40B00D37EEF /* GameCalculatorUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0244F3931E32E40B00D37EEF /* GameCalculatorUITests.m */; };
+		0244F3A31E33A3DC00D37EEF /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0244F3A21E33A3DC00D37EEF /* AudioToolbox.framework */; };
+		0244F3A61E33A65800D37EEF /* Hit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0244F3A51E33A65800D37EEF /* Hit.mp3 */; };
+		0244F3A81E34594700D37EEF /* NotHit.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0244F3A71E34594700D37EEF /* NotHit.mp3 */; };
+		0244F3AA1E345C1000D37EEF /* Over.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0244F3A91E345C1000D37EEF /* Over.mp3 */; };
+		0244F3AC1E345FAB00D37EEF /* UFO.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0244F3AB1E345FAB00D37EEF /* UFO.mp3 */; };
+		0244F3AE1E34656300D37EEF /* Clear.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0244F3AD1E34656300D37EEF /* Clear.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +57,12 @@
 		0244F38F1E32E40B00D37EEF /* GameCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0244F3931E32E40B00D37EEF /* GameCalculatorUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameCalculatorUITests.m; sourceTree = "<group>"; };
 		0244F3951E32E40B00D37EEF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0244F3A21E33A3DC00D37EEF /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		0244F3A51E33A65800D37EEF /* Hit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Hit.mp3; path = Resources/Sound/Hit.mp3; sourceTree = "<group>"; };
+		0244F3A71E34594700D37EEF /* NotHit.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = NotHit.mp3; path = Resources/Sound/NotHit.mp3; sourceTree = "<group>"; };
+		0244F3A91E345C1000D37EEF /* Over.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Over.mp3; path = Resources/Sound/Over.mp3; sourceTree = "<group>"; };
+		0244F3AB1E345FAB00D37EEF /* UFO.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = UFO.mp3; path = Resources/Sound/UFO.mp3; sourceTree = "<group>"; };
+		0244F3AD1E34656300D37EEF /* Clear.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Clear.mp3; path = Resources/Sound/Clear.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0244F3A31E33A3DC00D37EEF /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +98,7 @@
 				0244F3871E32E40B00D37EEF /* GameCalculatorTests */,
 				0244F3921E32E40B00D37EEF /* GameCalculatorUITests */,
 				0244F36C1E32E40B00D37EEF /* Products */,
+				0244F3A11E33A3DC00D37EEF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,6 +131,7 @@
 		0244F36E1E32E40B00D37EEF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0244F3A41E33A62500D37EEF /* Audio */,
 				0244F36F1E32E40B00D37EEF /* main.m */,
 			);
 			name = "Supporting Files";
@@ -138,6 +153,26 @@
 				0244F3951E32E40B00D37EEF /* Info.plist */,
 			);
 			path = GameCalculatorUITests;
+			sourceTree = "<group>";
+		};
+		0244F3A11E33A3DC00D37EEF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0244F3A21E33A3DC00D37EEF /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0244F3A41E33A62500D37EEF /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				0244F3AD1E34656300D37EEF /* Clear.mp3 */,
+				0244F3AB1E345FAB00D37EEF /* UFO.mp3 */,
+				0244F3A91E345C1000D37EEF /* Over.mp3 */,
+				0244F3A71E34594700D37EEF /* NotHit.mp3 */,
+				0244F3A51E33A65800D37EEF /* Hit.mp3 */,
+			);
+			name = Audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,8 +284,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0244F3AA1E345C1000D37EEF /* Over.mp3 in Resources */,
+				0244F3AC1E345FAB00D37EEF /* UFO.mp3 in Resources */,
+				0244F3A81E34594700D37EEF /* NotHit.mp3 in Resources */,
 				0244F37E1E32E40B00D37EEF /* LaunchScreen.storyboard in Resources */,
 				0244F37B1E32E40B00D37EEF /* Assets.xcassets in Resources */,
+				0244F3A61E33A65800D37EEF /* Hit.mp3 in Resources */,
+				0244F3AE1E34656300D37EEF /* Clear.mp3 in Resources */,
 				0244F3791E32E40B00D37EEF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +556,7 @@
 				0244F39A1E32E40B00D37EEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0244F39B1E32E40B00D37EEF /* Build configuration list for PBXNativeTarget "GameCalculatorTests" */ = {
 			isa = XCConfigurationList;
@@ -524,6 +565,7 @@
 				0244F39D1E32E40B00D37EEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0244F39E1E32E40B00D37EEF /* Build configuration list for PBXNativeTarget "GameCalculatorUITests" */ = {
 			isa = XCConfigurationList;
@@ -532,6 +574,7 @@
 				0244F3A01E32E40B00D37EEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
