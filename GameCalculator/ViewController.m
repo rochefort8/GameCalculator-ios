@@ -53,7 +53,11 @@ NSString *const Segment7SeparatorNameList[] = {
 #define MAX_REPEAT_COUNT_IN_STAGE (3)
 #define MAX_DIGIT_EMERGE_COUNT (16)
 
-int stageNumber ;
+int patternNumber ;     /* 1 to 9 */
+int partNumber ;        /* 1 or 2 */
+
+int totalScore ;
+
 int repeatCountInStage ;
 int targetNumber ;
 int segmentDigitNumber[MAX_SEGMENT_POSITION];
@@ -61,6 +65,7 @@ int sumOfShootNumber ;
 int emergeUFO ;
 int shootCount ;
 int digitCount ;
+
 
 UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
 
@@ -75,13 +80,28 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
     SegmentImageList[3] = _segmentImage_3 ;
     SegmentImageList[4] = _segmentImage_4 ;
     SegmentImageList[5] = _segmentImage_5 ;
-    stageNumber = 0 ;
+    
+    [self resetPattern];
+    
     repeatCountInStage = 0;
     targetNumber = 0;
+    totalScore = 0 ;
     
     [self initAudio];
 }
 
+- (void)resetPattern {
+    patternNumber = 0;
+    partNumber = 0 ;
+    totalScore = 0;
+}
+
+- (void)incrementPattern {
+    if (++patternNumber > 9) {
+        patternNumber = 1;
+        partNumber = (partNumber % 2) + 1 ; /* 1 -> 2 -> 1 -> 2 -> .... */
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -89,19 +109,21 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
 }
 
 - (IBAction)onReset:(id)sender {
-    [self startStage];
+    [self resetPattern] ;
+    [self startPattern];
 }
 
--(void)startStage {
-    stageNumber = 0 ;
+-(void)startPattern {
+    
     repeatCountInStage = 0 ;
     shootCount = 0 ;
     emergeUFO = 0 ;
-    [self resetSegment];
+    [self prepareNewPattern];
     [self setNextDigit];
 }
 
-- (void)resetSegment {
+- (void)prepareNewPattern {
+    
     targetNumber = 0;
     sumOfShootNumber = 0 ;
     digitCount = 0 ;
@@ -140,7 +162,7 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
     if (segmentDigitNumber[MAX_SEGMENT_POSITION-1] != SEG_DIGIT_NONE) {
         NSLog(@"Over") ;
         if (++repeatCountInStage < MAX_REPEAT_COUNT_IN_STAGE) {
-            [self resetSegment] ;
+            [self prepareNewPattern] ;
             [self.audioOver play] ;
 
         } else {
@@ -179,10 +201,7 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
 
 -(void)updateDigitTimerExpired:(NSTimer*)timer{
     
-    NSString *str = [_updateDigitTimer isValid] ? @"yes" : @"no";
-    NSLog(@"isValid:%@", str);
     [_updateDigitTimer invalidate] ;
-    
     [self setNextDigit] ;
 }
 
@@ -210,6 +229,19 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
             [self.audioHit play] ;
         }
         NSLog(@"Hit %d at segment %d.", targetNumber,i);
+        
+        /* Score */
+        int score = 0 ;
+        if (targetNumber == SEG_DIGIT_UFO) {
+            score = 250 ;
+        } else {
+            score = 60 - 10*i ; /* 10 20 30 40 50 60 */
+        }
+        NSLog(@"Score=%d",score) ;
+        totalScore += score ;
+
+        NSLog(@"Score=%d",totalScore) ;
+
         if ((SEG_DIGIT_1 <= targetNumber) && (targetNumber <= SEG_DIGIT_9)) {
             sumOfShootNumber += targetNumber ;
             if ((sumOfShootNumber % 10) == 0){
@@ -230,6 +262,7 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
                 NSLog(@"digitCount!=0, ==%d",digitCount) ;
             }
             NSLog(@"Clear!!") ;
+            [self setScoreImage];
             [self.audioClear play] ;
             
             [_updateDigitTimer invalidate];
@@ -247,10 +280,30 @@ UIImageView *SegmentImageList[MAX_SEGMENT_POSITION] ;
     }
 }
 
+- (void)setScoreImage {
+    targetNumber = patternNumber ;
+    for (int i = 0;i < MAX_SEGMENT_POSITION;i++) {
+        segmentDigitNumber[i] = SEG_DIGIT_0 ;
+    }
+    NSLog (@"Score=%d",totalScore) ;
+    
+    int _score = totalScore ;
+    
+    for (int i = 0; i < MAX_SEGMENT_POSITION-1;i++) {
+        segmentDigitNumber[i+1] = (_score % 100) / 10;
+        _score /= 10 ;
+    }
+    
+    [self setDigitImage ];
+    [self setSeparatorDigitImage] ;
+    [self setTargetDigitImage];
+}
+
 -(void)nextStageTimerExpired:(NSTimer*)timer{
     [_updateDigitTimer invalidate] ;
     
-    [self startStage] ;
+    [self incrementPattern];
+    [self startPattern] ;
 }
 
 - (void)initAudio
